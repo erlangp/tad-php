@@ -64,6 +64,9 @@ class TADResponse
      */
     public function __construct($response, $encoding)
     {
+        // Remove non-ASCII characters
+        $response = preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $response);
+
         $header = $this->extract_xml_header($response);
 
         if ('' === $header) {
@@ -94,7 +97,7 @@ class TADResponse
      *
      * @param string $response XML string.
      */
-    public function set_response($response='')
+    public function set_response($response = '')
     {
         if ($this->is_there_no_data($response)) {
             !$this->is_no_data_response($response) && $response = $this->build_no_data_response($response);
@@ -104,7 +107,7 @@ class TADResponse
         }
 
         $xml_header = $this->extract_xml_header($response);
-        if ('' !== $xml_header && 0!== strcmp($this->response_header, $xml_header)) {
+        if ('' !== $xml_header && 0 !== strcmp($this->response_header, $xml_header)) {
             $this->response_header = $xml_header;
         }
 
@@ -231,8 +234,8 @@ class TADResponse
             if (count($filters) !== count($args)) {
                 throw new FilterArgumentError(
                     'Invalid number of arguments: '
-                    . count($filters) . ' expected, '
-                    . count($args) . ' given.'
+                        . count($filters) . ' expected, '
+                        . count($args) . ' given.'
                 );
             }
 
@@ -286,7 +289,7 @@ class TADResponse
      * @param string $xml_init_row_tag XML root tag.
      * @return string XML string filtered.
      */
-    public function filter_xml($xml, $filter, array $range=[], $xml_init_row_tag='<Row>')
+    public function filter_xml($xml, $filter, array $range = [], $xml_init_row_tag = '<Row>')
     {
         $xml_header = $this->extract_xml_header($xml);
 
@@ -305,25 +308,22 @@ class TADResponse
             $indexes = array_keys(
                 array_filter(
                     $matches[1],
-                    function($data) use ($range) {
+                    function ($data) use ($range) {
                         switch (count($range)) {
                             case 1:
                                 if (isset($range['like'])) {
                                     $result = false === strpos($data, $range['like']) ? false : true;
                                 } elseif (isset($range['start'])) {
                                     $result = is_numeric($data) ?
-                                            $data >= $range['start'] :
-                                            0 <= strcmp($data, $range['start']);
+                                        $data >= $range['start'] : 0 <= strcmp($data, $range['start']);
                                 } else {
                                     $result = is_numeric($data) ?
-                                            $data <= $range['end'] :
-                                            0 >= strcmp($data, $range['end']);
+                                        $data <= $range['end'] : 0 >= strcmp($data, $range['end']);
                                 }
                                 break;
                             case 2:
                                 $result = is_numeric($data) ?
-                                    $data >= $range['start'] && $data <= $range['end'] :
-                                    !(strcmp($data, $range['start']) < 0 || strcmp($data, $range['end']) > 0);
+                                    $data >= $range['start'] && $data <= $range['end'] : !(strcmp($data, $range['start']) < 0 || strcmp($data, $range['end']) > 0);
                                 break;
                             default:
                                 $result = false;
@@ -334,19 +334,16 @@ class TADResponse
                 )
             );
 
-                $filtered_xml = (
-                    0 === count($indexes) ?
-                    self::XML_NO_DATA_FOUND :
-                    join(
-                        '',
-                        array_map(
-                            function($index) use ($rows, $xml_init_row_tag) {
-                                return $xml_init_row_tag . $rows[$index];
-                            },
-                            $indexes
-                        )
+            $filtered_xml = (0 === count($indexes) ?
+                self::XML_NO_DATA_FOUND : join(
+                    '',
+                    array_map(
+                        function ($index) use ($rows, $xml_init_row_tag) {
+                            return $xml_init_row_tag . $rows[$index];
+                        },
+                        $indexes
                     )
-                );
+                ));
         }
 
         $xml = $xml_header . $main_xml_init_tag . trim($filtered_xml) . $main_xml_end_tag;
@@ -386,7 +383,7 @@ class TADResponse
         $header = $this->response_header;
 
         if (is_null($header) || '' === $header) {
-            $header ='<?xml version="1.0" encoding="' . $encoding . '" standalone="no"?>';
+            $header = '<?xml version="1.0" encoding="' . $encoding . '" standalone="no"?>';
         } else {
             $header = preg_filter('/encoding="([^"]+)"/', 'encoding="' . $encoding . '"', $header);
         }
@@ -400,7 +397,7 @@ class TADResponse
      * @param string $xml string to be cleaned out.
      * @return string XML string cleaned out.
      */
-    private function sanitize_xml_string($xml, array $undesired_chars = [ "\n", "\r", "\t" ])
+    private function sanitize_xml_string($xml, array $undesired_chars = ["\n", "\r", "\t"])
     {
         return trim(str_replace($undesired_chars, '', $xml));
     }
@@ -430,7 +427,6 @@ class TADResponse
             isset($args['start']) ? $normalized_filter_args['start'] = $args['start'] : null;
             isset($args['end']) ? $normalized_filter_args['end'] = $args['end'] : null;
             isset($args['like']) ? $normalized_filter_args['like'] = $args['like'] : null;
-
         } else {
             $normalized_filter_args['start'] = $normalized_filter_args['end'] = $args;
         }
