@@ -111,127 +111,127 @@ class TADZKLib
             'command_id' => self::CMD_DEVICE,
             'command_string' => '~Platform',
             'should_disconnect' => true,
-            'result_filter_string'=>'~Platform='
+            'result_filter_string' => '~Platform='
         ],
         'get_fingerprint_algorithm' => [
             'command_id' => self::CMD_DEVICE,
             'command_string' => '~ZKFPVersion',
             'should_disconnect' => true,
-            'result_filter_string'=>'~ZKFPVersion='
+            'result_filter_string' => '~ZKFPVersion='
         ],
         'get_serial_number' => [
             'command_id' => self::CMD_DEVICE,
             'command_string' => '~SerialNumber',
             'should_disconnect' => true,
-            'result_filter_string'=>'~SerialNumber='
+            'result_filter_string' => '~SerialNumber='
         ],
         'get_oem_vendor' => [
             'command_id' => self::CMD_DEVICE,
             'command_string' => '~OEMVendor',
             'should_disconnect' => true,
-            'result_filter_string'=>'~OEMVendor='
+            'result_filter_string' => '~OEMVendor='
         ],
         'get_mac_address' => [
             'command_id' => self::CMD_DEVICE,
             'command_string' => 'MAC',
             'should_disconnect' => true,
-            'result_filter_string'=>'MAC='
+            'result_filter_string' => 'MAC='
         ],
         'get_device_name' => [
             'command_id' => self::CMD_DEVICE,
             'command_string' => '~DeviceName',
             'should_disconnect' => true,
-            'result_filter_string'=>'~DeviceName='
+            'result_filter_string' => '~DeviceName='
         ],
         'get_manufacture_time' => [
             'command_id' => self::CMD_DEVICE,
             'command_string' => '~ProductTime',
             'should_disconnect' => true,
-            'result_filter_string'=>'~ProductTime='
+            'result_filter_string' => '~ProductTime='
         ],
         'get_antipassback_mode' => [
             'command_id' => self::CMD_DEVICE,
             'command_string' => '~APBFO',
             'should_disconnect' => true,
-            'result_filter_string'=>'~APBFO='
+            'result_filter_string' => '~APBFO='
         ],
         'get_workcode' => [
             'command_id' => self::CMD_DEVICE,
             'command_string' => '~WCFO',
             'should_disconnect' => true,
-            'result_filter_string'=>'~WCFO='
+            'result_filter_string' => '~WCFO='
         ],
         'get_ext_format_mode' => [
             'command_id' => self::CMD_DEVICE,
             'command_string' => '~ExtendFmt',
             'should_disconnect' => true,
-            'result_filter_string'=>'~ExtendFmt='
+            'result_filter_string' => '~ExtendFmt='
         ],
         'get_encrypted_mode' => [
             'command_id' => self::CMD_DEVICE,
             'command_string' => 'encrypt_out',
             'should_disconnect' => true,
-            'result_filter_string'=>'encrypt_out='
+            'result_filter_string' => 'encrypt_out='
         ],
         'get_pin2_width' => [
             'command_id' => self::CMD_DEVICE,
             'command_string' => '~PIN2Width',
             'should_disconnect' => true,
-            'result_filter_string'=>'~PIN2Width='
+            'result_filter_string' => '~PIN2Width='
         ],
         'get_ssr_mode' => [
             'command_id' => self::CMD_DEVICE,
             'command_string' => '~SSR',
             'should_disconnect' => true,
-            'result_filter_string'=>'~SSR='
+            'result_filter_string' => '~SSR='
         ],
         'get_firmware_version' => [
             'command_id' => self::CMD_VERSION,
             'command_string' => self::EMPTY_STRING,
             'should_disconnect' => true,
-            'result_filter_string'=>false
+            'result_filter_string' => false
         ],
         'get_free_sizes' => [
             'command_id' => self::CMD_GET_FREE_SIZES,
             'command_string' => self::EMPTY_STRING,
             'should_disconnect' => true,
-            'result_filter_string'=>false
+            'result_filter_string' => false
         ],
         'set_date' => [
             'command_id' => self::CMD_SET_TIME,
             'command_string' => self::CUSTOMIZED_COMMAND_STRING,
             'should_disconnect' => true,
-            'result_filter_string'=>false
+            'result_filter_string' => false
         ],
         'delete_admin' => [
             'command_id' => self::CMD_CLEAR_ADMIN,
             'command_string' => self::EMPTY_STRING,
             'should_disconnect' => true,
-            'result_filter_string'=>false
+            'result_filter_string' => false
         ],
         'enable' => [
             'command_id' => self::CMD_ENABLEDEVICE,
             'command_string' => self::EMPTY_STRING,
             'should_disconnect' => true,
-            'result_filter_string'=>false
+            'result_filter_string' => false
         ],
         'disable' => [
             'command_id' => self::CMD_DISABLEDEVICE,
             'command_string' => self::EMPTY_STRING,
             'should_disconnect' => false,
-            'result_filter_string'=>false
+            'result_filter_string' => false
         ],
         'restart' => [
             'command_id' => self::CMD_RESTART,
             'command_string' => self::EMPTY_STRING,
             'should_disconnect' => true,
-            'result_filter_string'=>false
+            'result_filter_string' => false
         ],
         'poweroff' => [
             'command_id' => self::CMD_POWEROFF,
             'command_string' => self::EMPTY_STRING,
             'should_disconnect' => true,
-            'result_filter_string'=>false
+            'result_filter_string' => false
         ]
     ];
 
@@ -277,7 +277,7 @@ class TADZKLib
 
         $this->connect();
 
-        switch($command){
+        switch ($command) {
             case 'set_date':
                 $response = $this->zk_set_date($args);
                 break;
@@ -324,7 +324,7 @@ class TADZKLib
             if (strlen($this->data_recv) > 0) {
                 $u = unpack('H2h1/H2h2/H2h3/H2h4/H2h5/H2h6', substr($this->data_recv, 0, 8));
 
-                $this->session_id =  hexdec($u['h6'].$u['h5']);
+                $this->session_id =  hexdec($u['h6'] . $u['h5']);
                 return $this->checkValid($this->data_recv);
             } else {
                 return false;
@@ -349,7 +349,7 @@ class TADZKLib
         $session_id = $this->session_id;
 
         $u = unpack('H2h1/H2h2/H2h3/H2h4/H2h5/H2h6/H2h7/H2h8', substr($this->data_recv, 0, 8));
-        $reply_id = hexdec($u['h8'].$u['h7']);
+        $reply_id = hexdec($u['h8'] . $u['h7']);
 
         $buf = $this->createHeader($command, $chksum, $session_id, $reply_id, $command_string);
 
@@ -417,7 +417,7 @@ class TADZKLib
      * @param int $reply_id device's reply.
      * @return boolean <b><code>true</code></b> on successfully, otherwise returns <b><code>false</code></b>.
      */
-    private function send_command_to_device($command, $command_string = '', $reply_id =null)
+    private function send_command_to_device($command, $command_string = '', $reply_id = null)
     {
         $chksum = 0;
         $session_id = $this->session_id;
@@ -425,7 +425,7 @@ class TADZKLib
         $u = unpack('H2h1/H2h2/H2h3/H2h4/H2h5/H2h6/H2h7/H2h8', substr($this->data_recv, 0, 8));
 
         if (is_null($reply_id)) {
-            $reply_id = hexdec($u['h8'].$u['h7']);
+            $reply_id = hexdec($u['h8'] . $u['h7']);
         }
 
         $buf = $this->createHeader($command, $chksum, $session_id, $reply_id, $command_string);
@@ -435,7 +435,7 @@ class TADZKLib
         try {
             socket_recvfrom($this->zkclient, $this->data_recv, 1024, 0, $this->ip, $this->port);
             $u = unpack('H2h1/H2h2/H2h3/H2h4/H2h5/H2h6', substr($this->data_recv, 0, 8));
-            $this->session_id =  hexdec($u['h6'].$u['h5']);
+            $this->session_id =  hexdec($u['h6'] . $u['h5']);
 
             $this->result = $this->checkValid($this->data_recv);
 
@@ -464,7 +464,7 @@ class TADZKLib
         $i = $l;
         $j = 1;
         while ($i > 1) {
-            $u = unpack('S', pack('C2', $p['c'.$j], $p['c'.($j+1)]));
+            $u = unpack('S', pack('C2', $p['c' . $j], $p['c' . ($j + 1)]));
 
             $chksum += $u[1];
 
@@ -472,12 +472,12 @@ class TADZKLib
                 $chksum -= self::USHRT_MAX;
             }
 
-            $i-=2;
-            $j+=2;
+            $i -= 2;
+            $j += 2;
         }
 
         if ($i) {
-            $chksum = $chksum + $p['c'.strval(count($p))];
+            $chksum = $chksum + $p['c' . strval(count($p))];
         }
 
         while ($chksum > self::USHRT_MAX) {
@@ -512,9 +512,9 @@ class TADZKLib
     {
         /*This function puts a the parts that make up a packet together and
         packs them into a byte string*/
-        $buf = pack('SSSS', $command, $chksum, $session_id, $reply_id).$command_string;
+        $buf = pack('SSSS', $command, $chksum, $session_id, $reply_id) . $command_string;
 
-        $buf = unpack('C'.(8+strlen($command_string)).'c', $buf);
+        $buf = unpack('C' . (8 + strlen($command_string)) . 'c', $buf);
 
         $u = unpack('S', $this->createChkSum($buf));
 
@@ -534,7 +534,7 @@ class TADZKLib
 
         $buf = pack('SSSS', $command, $chksum, $session_id, $reply_id);
 
-        return $buf.$command_string;
+        return $buf . $command_string;
     }
 
     /**
@@ -548,7 +548,7 @@ class TADZKLib
     {
         $u = unpack('H2h1/H2h2', substr($reply, 0, 8));
 
-        $command = hexdec($u['h2'].$u['h1']);
+        $command = hexdec($u['h2'] . $u['h1']);
 
         if ($command == self::CMD_ACK_OK) {
             return true;
@@ -564,7 +564,7 @@ class TADZKLib
      * @param mixed $result command result.
      * @return string XML response.
      */
-    private function build_command_response($command, $result_code, $result, $encoding, $result_filter_string=false)
+    private function build_command_response($command, $result_code, $result, $encoding, $result_filter_string = false)
     {
         $response_data = [];
 
@@ -577,7 +577,7 @@ class TADZKLib
                 $response = $xml_header . '<' . $base_xml_tag . '>' . '</' . $base_xml_tag . '>';
                 return $response;
             }
-            $response_data = ['Row'=>$result];
+            $response_data = ['Row' => $result];
         } else {
             if (!is_bool($result) && true === $result_code) {
                 $result_filter_string = $result_filter_string ? $result_filter_string : null;
@@ -588,7 +588,7 @@ class TADZKLib
             }
 
             $result_code = $result_code ? '1' : '0';
-            $response_data = ['Row'=>['Result'=> $result_code, 'Information'=> $result_data]];
+            $response_data = ['Row' => ['Result' => $result_code, 'Information' => $result_data]];
         }
 
         return $this->array_to_xml(new \SimpleXMLElement('<' . $base_xml_tag . '/>'), $response_data, $encoding);
@@ -609,7 +609,7 @@ class TADZKLib
      * @param array $dt input 'datetime' array.
      * @return array array generated.
      */
-    private function setup_datetime(array $dt=[])
+    private function setup_datetime(array $dt = [])
     {
         $now = explode(' ', date("Y-m-d H:i:s"));
         $dt = array_filter($dt, 'strlen');
@@ -621,8 +621,9 @@ class TADZKLib
         $time = explode(':', $dt['time']);
 
         return [
-            'year'=>$date[0], 'month'=>$date[1], 'day'=>$date[2],
-            'hour'=>$time[0], 'minute'=>$time[1], 'second'=>$time[2]];
+            'year' => $date[0], 'month' => $date[1], 'day' => $date[2],
+            'hour' => $time[0], 'minute' => $time[1], 'second' => $time[2]
+        ];
     }
 
     /**
@@ -635,7 +636,7 @@ class TADZKLib
     {
         $tmp = '';
 
-        for ($i=strlen($hexstr); $i>=0; $i--) {
+        for ($i = strlen($hexstr); $i >= 0; $i--) {
             $tmp .= substr($hexstr, $i, 2);
             $i--;
         }
@@ -656,8 +657,7 @@ class TADZKLib
         /*Encode a timestamp send at the timeclock
 
         copied from zkemsdk.c - EncodeTime*/
-        $d = ( ($t['year'] % 100) * 12 * 31 + (($t['month'] - 1) * 31) + $t['day'] - 1) *
-             (24 * 60 * 60) + ($t['hour'] * 60 + $t['minute']) * 60 + $t['second'];
+        $d = (($t['year'] % 100) * 12 * 31 + (($t['month'] - 1) * 31) + $t['day'] - 1) * (24 * 60 * 60) + ($t['hour'] * 60 + $t['minute']) * 60 + $t['second'];
 
         return $d;
     }

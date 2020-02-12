@@ -56,16 +56,16 @@ class TADResponseTest  extends \PHPUnit_Framework_TestCase
      */
     public function testGetResponseInDifferentFormats(TADResponse $tr)
     {
-        $xml_response = $tr->get_response(['format'=>'xml']);
+        $xml_response = $tr->get_response(['format' => 'xml']);
         libxml_use_internal_errors(true);
         $valid_xml = simplexml_load_string($xml_response);
         libxml_use_internal_errors(false);
         $this->assertNotFalse($valid_xml);
 
-        $json_response = $tr->get_response(['format'=>'json']);
+        $json_response = $tr->get_response(['format' => 'json']);
         $this->assertNotNull(json_decode($json_response));
 
-        $array_response = $tr->get_response(['format'=>'array']);
+        $array_response = $tr->get_response(['format' => 'array']);
         $this->assertTrue(is_array($array_response) && 0 !== count($array_response));
     }
 
@@ -76,10 +76,10 @@ class TADResponseTest  extends \PHPUnit_Framework_TestCase
     {
         $tr->set_response('');
         $expected_empty_response = ''
-                . '<?xml version="1.0" encoding="utf-8" standalone="no"?>'
-                . '<Response>'
-                . '<Row><Result>0</Result><Information>No data!</Information></Row>'
-                . '</Response>';
+            . '<?xml version="1.0" encoding="utf-8" standalone="no"?>'
+            . '<Response>'
+            . '<Row><Result>0</Result><Information>No data!</Information></Row>'
+            . '</Response>';
         $this->assertEquals(1, $tr->count());
         $this->assertTrue($tr->is_empty_response());
         $this->assertEquals($expected_empty_response, $tr->get_response());
@@ -92,7 +92,8 @@ class TADResponseTest  extends \PHPUnit_Framework_TestCase
     {
         $tr = new TADResponse('<Response><data>Foo</data></Response>', 'iso8859-1');
         $first_response = $tr->to_xml();
-        $tr->set_response(''
+        $tr->set_response(
+            ''
                 . '<?xml version="1.0" encoding="utf-8" standalone="no"?>'
                 . '<Response><data>Foo</data></Response>'
         );
@@ -138,7 +139,7 @@ class TADResponseTest  extends \PHPUnit_Framework_TestCase
     public function testCount()
     {
         $tr = new TADResponse('<Response></Response>', 'iso8859-1');
-        $this->assertTrue(0 === $tr->count()-1);
+        $this->assertTrue(0 === $tr->count() - 1);
     }
 
     /**
@@ -168,7 +169,7 @@ class TADResponseTest  extends \PHPUnit_Framework_TestCase
     {
         $tr->set_response($xml);
 
-        $date_range = ['foo'=>'2014-01-01', 'end'=>'2014-11-29'];
+        $date_range = ['foo' => '2014-01-01', 'end' => '2014-11-29'];
         $tr->filter_by_date($date_range);
     }
 
@@ -179,18 +180,18 @@ class TADResponseTest  extends \PHPUnit_Framework_TestCase
     public function testFilterResponseByDate($xml, TADResponse $tr)
     {
         $tr->set_response($xml);
-        $this->assertEquals(9, $tr->filter_by_date(['start'=>'2014-01-01'])->count());
-        $this->assertEquals(1, $tr->filter_by_date(['start'=>'2014-12-04'])->count());
-        $this->assertTrue($tr->filter_by_date(['start'=>'2014-12-05'])->is_empty_response());
+        $this->assertEquals(9, $tr->filter_by_date(['start' => '2014-01-01'])->count());
+        $this->assertEquals(1, $tr->filter_by_date(['start' => '2014-12-04'])->count());
+        $this->assertTrue($tr->filter_by_date(['start' => '2014-12-05'])->is_empty_response());
 
         $tr->set_response($xml);
-        $this->assertEquals(9, $tr->filter_by_date(['end'=>'2014-12-31'])->count());
-//        $this->assertEquals(1, $tr->filter_by_date(['end'=>'2014-11-30'])->count());
-        $this->assertTrue($tr->filter_by_date(['end'=>'2014-11-29'])->is_empty_response());
+        $this->assertEquals(9, $tr->filter_by_date(['end' => '2014-12-31'])->count());
+        //        $this->assertEquals(1, $tr->filter_by_date(['end'=>'2014-11-30'])->count());
+        $this->assertTrue($tr->filter_by_date(['end' => '2014-11-29'])->is_empty_response());
 
         $tr->set_response($xml);
-        $this->assertEquals(9, $tr->filter_by_date(['start'=>'2014-11-01', 'end'=>'2014-12-31'])->count());
-        $this->assertTrue($tr->filter_by_date(['start'=>'2015-01-01', 'end'=>'2015-12-31'])->is_empty_response());
+        $this->assertEquals(9, $tr->filter_by_date(['start' => '2014-11-01', 'end' => '2014-12-31'])->count());
+        $this->assertTrue($tr->filter_by_date(['start' => '2015-01-01', 'end' => '2015-12-31'])->is_empty_response());
     }
 
     /**
@@ -200,10 +201,10 @@ class TADResponseTest  extends \PHPUnit_Framework_TestCase
     public function testFilterResponseByTime($xml, TADResponse $tr)
     {
         $tr->set_response($xml);
-        $this->assertEquals(5, $tr->filter_by_time(['start'=>'18:00:00'])->count());
-        $this->assertEquals(2, $tr->filter_by_time(['end'=>'19:00:00'])->count());
-        $this->assertEquals(1, $tr->filter_by_time(['start'=>'00:00:00', 'end'=>'02:00:00'])->count());
-        $this->assertTrue($tr->filter_by_date(['start'=>'00:00:00', 'end'=>'01:00:00'])->is_empty_response());
+        $this->assertEquals(5, $tr->filter_by_time(['start' => '18:00:00'])->count());
+        $this->assertEquals(2, $tr->filter_by_time(['end' => '19:00:00'])->count());
+        $this->assertEquals(1, $tr->filter_by_time(['start' => '00:00:00', 'end' => '02:00:00'])->count());
+        $this->assertTrue($tr->filter_by_date(['start' => '00:00:00', 'end' => '01:00:00'])->is_empty_response());
     }
 
     /**
@@ -213,8 +214,8 @@ class TADResponseTest  extends \PHPUnit_Framework_TestCase
     public function testFilterResponseByDateTime($xml, TADResponse $tr)
     {
         $tr->set_response($xml);
-        $this->assertEquals(9, $tr->filter_by_datetime(['start'=>'2014-11-30 18:00:00'])->count());
-        $this->assertEquals(9, $tr->filter_by_datetime(['end'=>'2014-12-31 19:00:00'])->count());
+        $this->assertEquals(9, $tr->filter_by_datetime(['start' => '2014-11-30 18:00:00'])->count());
+        $this->assertEquals(9, $tr->filter_by_datetime(['end' => '2014-12-31 19:00:00'])->count());
         $this->assertEquals(1, $tr->filter_by_datetime('2014-12-02 08:01:32')->count());
         $this->assertTrue($tr->filter_by_datetime('2015-01-01 00:00:00')->is_empty_response());
     }
@@ -237,10 +238,10 @@ class TADResponseTest  extends \PHPUnit_Framework_TestCase
     public function testFilterResponseByPin($xml, TADResponse $tr)
     {
         $tr->set_response($xml);
-        $this->assertEquals(9, $tr->filter_by_pin(['start'=>5])->count());
+        $this->assertEquals(9, $tr->filter_by_pin(['start' => 5])->count());
 
         $tr->set_response($xml);
-        $this->assertEquals(9, $tr->filter_by_pin(['end'=>9])->count());
+        $this->assertEquals(9, $tr->filter_by_pin(['end' => 9])->count());
 
         $tr->set_response($xml);
         $this->assertEquals(1, $tr->filter_by_pin(1)->count());
@@ -282,10 +283,10 @@ class TADResponseTest  extends \PHPUnit_Framework_TestCase
     public function testFilterResponseUsingLikeOperator($xml, TADResponse $tr)
     {
         $tr->set_response($xml);
-        $this->assertEquals(2, $tr->filter_by_name(['like'=>'Dolor'])->count());
+        $this->assertEquals(2, $tr->filter_by_name(['like' => 'Dolor'])->count());
 
         $tr->set_response($xml);
-        $this->assertTrue($tr->filter_by_name(['like'=>'ultricies'])->is_empty_response());
+        $this->assertTrue($tr->filter_by_name(['like' => 'ultricies'])->is_empty_response());
     }
 
     /**
@@ -295,7 +296,7 @@ class TADResponseTest  extends \PHPUnit_Framework_TestCase
     public function testFilterResponseUsingTooManyFilterArguments($xml, TADResponse $tr)
     {
         $tr->set_response($xml);
-        $this->assertTrue($tr->filter_by_name(['like'=>'Dolor', 'start'=>'Foo', 'end'=>'Bar' ])->is_empty_response());
+        $this->assertTrue($tr->filter_by_name(['like' => 'Dolor', 'start' => 'Foo', 'end' => 'Bar'])->is_empty_response());
     }
 
 
@@ -324,22 +325,22 @@ class TADResponseTest  extends \PHPUnit_Framework_TestCase
         return [
             [
                 ''
-                . '<?xml version="1.0" encoding="iso8859-1" standalone="no"?>'
-                . '<GetAllUserInfoResponse>'
-                . '<Row><PIN>1</PIN><Name>Lorem</Name><Password>1234</Password><Group>1</Group><Privilege>14</Privilege><Card>55555</Card><PIN2>1001</PIN2><TZ1>0</TZ1><TZ2>0</TZ2><TZ3>0</TZ3></Row>'
-                . '<Row><PIN>2</PIN><Name>Ipsum</Name><Password></Password><Group>1</Group><Privilege>0</Privilege><Card>0</Card><PIN2>1002</PIN2><TZ1>0</TZ1><TZ2>0</TZ2><TZ3>0</TZ3></Row>'
-                . '<Row><PIN>3</PIN><Name>Dolor Sed</Name><Password></Password><Group>1</Group><Privilege>0</Privilege><Card>0</Card><PIN2>1003</PIN2><TZ1>0</TZ1><TZ2>0</TZ2><TZ3>0</TZ3></Row>'
-                . '<Row><PIN>4</PIN><Name>Sit</Name><Password></Password><Group>1</Group><Privilege>0</Privilege><Card>0</Card><PIN2>1004</PIN2><TZ1>0</TZ1><TZ2>0</TZ2><TZ3>0</TZ3></Row>'
-                . '<Row><PIN>5</PIN><Name>Amet</Name><Password></Password><Group>1</Group><Privilege>0</Privilege><Card>0</Card><PIN2>1005</PIN2><TZ1>0</TZ1><TZ2>0</TZ2><TZ3>0</TZ3></Row>'
-                . '<Row><PIN>6</PIN><Name>Consectetur</Name><Password></Password><Group>1</Group><Privilege>0</Privilege><Card>0</Card><PIN2>1006</PIN2><TZ1>0</TZ1><TZ2>0</TZ2><TZ3>0</TZ3></Row>'
-                . '<Row><PIN>7</PIN><Name>Adipiscing</Name><Password></Password><Group>1</Group><Privilege>0</Privilege><Card>0</Card><PIN2>1007</PIN2><TZ1>0</TZ1><TZ2>0</TZ2><TZ3>0</TZ3></Row>'
-                . '<Row><PIN>8</PIN><Name>Elit</Name><Password></Password><Group>1</Group><Privilege>0</Privilege><Card>0</Card><PIN2>1008</PIN2><TZ1>0</TZ1><TZ2>0</TZ2><TZ3>0</TZ3></Row>'
-                . '<Row><PIN>9</PIN><Name>Nulla</Name><Password></Password><Group>1</Group><Privilege>0</Privilege><Card>0</Card><PIN2>1009</PIN2><TZ1>0</TZ1><TZ2>0</TZ2><TZ3>0</TZ3></Row>'
-                . '<Row><PIN>10</PIN><Name>Imperdiet</Name><Password></Password><Group>1</Group><Privilege>0</Privilege><Card>0</Card><PIN2>1010</PIN2><TZ1>0</TZ1><TZ2>0</TZ2><TZ3>0</TZ3></Row>'
-                . '<Row><PIN>11</PIN><Name>Molestie</Name><Password></Password><Group>1</Group><Privilege>0</Privilege><Card>0</Card><PIN2>1011</PIN2><TZ1>0</TZ1><TZ2>0</TZ2><TZ3>0</TZ3></Row>'
-                . '<Row><PIN>12</PIN><Name>Ante</Name><Password></Password><Group>1</Group><Privilege>0</Privilege><Card>0</Card><PIN2>1012</PIN2><TZ1>0</TZ1><TZ2>0</TZ2><TZ3>0</TZ3></Row>'
-                . '<Row><PIN>13</PIN><Name>Elit Luctus Dolor</Name><Password></Password><Group>1</Group><Privilege>0</Privilege><Card>0</Card><PIN2>1013</PIN2><TZ1>0</TZ1><TZ2>0</TZ2><TZ3>0</TZ3></Row>'
-                . '</GetAllUserInfoResponse>'
+                    . '<?xml version="1.0" encoding="iso8859-1" standalone="no"?>'
+                    . '<GetAllUserInfoResponse>'
+                    . '<Row><PIN>1</PIN><Name>Lorem</Name><Password>1234</Password><Group>1</Group><Privilege>14</Privilege><Card>55555</Card><PIN2>1001</PIN2><TZ1>0</TZ1><TZ2>0</TZ2><TZ3>0</TZ3></Row>'
+                    . '<Row><PIN>2</PIN><Name>Ipsum</Name><Password></Password><Group>1</Group><Privilege>0</Privilege><Card>0</Card><PIN2>1002</PIN2><TZ1>0</TZ1><TZ2>0</TZ2><TZ3>0</TZ3></Row>'
+                    . '<Row><PIN>3</PIN><Name>Dolor Sed</Name><Password></Password><Group>1</Group><Privilege>0</Privilege><Card>0</Card><PIN2>1003</PIN2><TZ1>0</TZ1><TZ2>0</TZ2><TZ3>0</TZ3></Row>'
+                    . '<Row><PIN>4</PIN><Name>Sit</Name><Password></Password><Group>1</Group><Privilege>0</Privilege><Card>0</Card><PIN2>1004</PIN2><TZ1>0</TZ1><TZ2>0</TZ2><TZ3>0</TZ3></Row>'
+                    . '<Row><PIN>5</PIN><Name>Amet</Name><Password></Password><Group>1</Group><Privilege>0</Privilege><Card>0</Card><PIN2>1005</PIN2><TZ1>0</TZ1><TZ2>0</TZ2><TZ3>0</TZ3></Row>'
+                    . '<Row><PIN>6</PIN><Name>Consectetur</Name><Password></Password><Group>1</Group><Privilege>0</Privilege><Card>0</Card><PIN2>1006</PIN2><TZ1>0</TZ1><TZ2>0</TZ2><TZ3>0</TZ3></Row>'
+                    . '<Row><PIN>7</PIN><Name>Adipiscing</Name><Password></Password><Group>1</Group><Privilege>0</Privilege><Card>0</Card><PIN2>1007</PIN2><TZ1>0</TZ1><TZ2>0</TZ2><TZ3>0</TZ3></Row>'
+                    . '<Row><PIN>8</PIN><Name>Elit</Name><Password></Password><Group>1</Group><Privilege>0</Privilege><Card>0</Card><PIN2>1008</PIN2><TZ1>0</TZ1><TZ2>0</TZ2><TZ3>0</TZ3></Row>'
+                    . '<Row><PIN>9</PIN><Name>Nulla</Name><Password></Password><Group>1</Group><Privilege>0</Privilege><Card>0</Card><PIN2>1009</PIN2><TZ1>0</TZ1><TZ2>0</TZ2><TZ3>0</TZ3></Row>'
+                    . '<Row><PIN>10</PIN><Name>Imperdiet</Name><Password></Password><Group>1</Group><Privilege>0</Privilege><Card>0</Card><PIN2>1010</PIN2><TZ1>0</TZ1><TZ2>0</TZ2><TZ3>0</TZ3></Row>'
+                    . '<Row><PIN>11</PIN><Name>Molestie</Name><Password></Password><Group>1</Group><Privilege>0</Privilege><Card>0</Card><PIN2>1011</PIN2><TZ1>0</TZ1><TZ2>0</TZ2><TZ3>0</TZ3></Row>'
+                    . '<Row><PIN>12</PIN><Name>Ante</Name><Password></Password><Group>1</Group><Privilege>0</Privilege><Card>0</Card><PIN2>1012</PIN2><TZ1>0</TZ1><TZ2>0</TZ2><TZ3>0</TZ3></Row>'
+                    . '<Row><PIN>13</PIN><Name>Elit Luctus Dolor</Name><Password></Password><Group>1</Group><Privilege>0</Privilege><Card>0</Card><PIN2>1013</PIN2><TZ1>0</TZ1><TZ2>0</TZ2><TZ3>0</TZ3></Row>'
+                    . '</GetAllUserInfoResponse>'
             ]
 
         ];

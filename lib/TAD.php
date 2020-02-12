@@ -27,11 +27,11 @@
 
 namespace TADPHP;
 
-use TADPHP\Providers\TADSoap;
-use TADPHP\Providers\TADZKLib;
 use TADPHP\Exceptions\ConnectionError;
 use TADPHP\Exceptions\UnrecognizedArgument;
 use TADPHP\Exceptions\UnrecognizedCommand;
+use TADPHP\Providers\TADSoap;
+use TADPHP\Providers\TADZKLib;
 
 /**
  * TAD: Time & Attendance Device is a class that implements some function presents in time and attendance device.
@@ -219,11 +219,11 @@ class TAD
     public static function is_device_online($ip, $timeout = 1)
     {
         $handler = curl_init($ip);
-        curl_setopt_array($handler, [ CURLOPT_TIMEOUT => $timeout, CURLOPT_RETURNTRANSFER => true ]);
+        curl_setopt_array($handler, [CURLOPT_TIMEOUT => $timeout, CURLOPT_RETURNTRANSFER => true]);
         $response = curl_exec($handler);
         curl_close($handler);
 
-        return (boolean)$response;
+        return (bool) $response;
     }
 
     /**
@@ -236,12 +236,12 @@ class TAD
     public function __construct(TADSoap $soap_provider, TADZKLib $zklib_provider, array $options = [])
     {
         $this->ip = $options['ip'];
-        $this->internal_id = (integer) $options['internal_id'];
-        $this->com_key = (integer) $options['com_key'];
+        $this->internal_id = (int) $options['internal_id'];
+        $this->com_key = (int) $options['com_key'];
         $this->description = $options['description'];
-        $this->connection_timeout = (integer) $options['connection_timeout'];
+        $this->connection_timeout = (int) $options['connection_timeout'];
         $this->encoding = strtolower($options['encoding']);
-        $this->udp_port = (integer) $options['udp_port'];
+        $this->udp_port = (int) $options['udp_port'];
 
         $this->tad_soap = $soap_provider;
         $this->zklib = $zklib_provider;
@@ -269,8 +269,8 @@ class TAD
         $command_args = count($args) === 0 ? [] : array_shift($args);
 
         $this->check_for_connection() &&
-        $this->check_for_valid_command($command) &&
-        $this->check_for_unrecognized_args($command_args);
+            $this->check_for_valid_command($command) &&
+            $this->check_for_unrecognized_args($command_args);
 
         if (in_array($command, TADSoap::get_commands_available())) {
             $response = $this->execute_command_via_tad_soap($command, $command_args);
@@ -311,7 +311,7 @@ class TAD
     public function execute_command_via_zklib($command, array $args = [])
     {
         $command_args = $this->config_array_items($args);
-        $response = $this->zklib->{$command}(array_merge(['encoding'=>$this->encoding], $command_args));
+        $response = $this->zklib->{$command}(array_merge(['encoding' => $this->encoding], $command_args));
 
         return $response;
     }
@@ -470,7 +470,7 @@ class TAD
 
         foreach (static::get_valid_commands_args() as $parseable_arg_key) {
             $normalized_args[$parseable_arg_key] =
-                    isset($values[$parseable_arg_key]) ? $values[$parseable_arg_key] : null;
+                isset($values[$parseable_arg_key]) ? $values[$parseable_arg_key] : null;
         }
 
         return $normalized_args;

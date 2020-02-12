@@ -40,7 +40,7 @@ After download TAD-PHP, you have 2 ways to get your enviroment configured to use
 1. Install Composer:
 	```
     curl -s https://getcomposer.org/installer | php
-	
+
 	```
 
 2. Get inside TADPHP root folder and generate the **autoload.php** file:
@@ -48,15 +48,15 @@ After download TAD-PHP, you have 2 ways to get your enviroment configured to use
     php composer.phar dump-autoload
     ```
     The command above will generate a folder called **vendor**. Inside of it, you'll see the **autoload.php**
-    
+
 3. Require/Include **autoload.php** file in the **index.php** of your project or whatever file you need to use **TAD-PHP** classes:
 	```php
     <?php
     require 'vendor/autoload.php';
     ...
-    
+
     ```
-    
+
 ####Loading TAD-PHP classes by hand
 Even if Composer it's the preferred method to generate the files needed to get all classes loaded, maybe you want to do the task by hand:
 
@@ -77,9 +77,9 @@ Even if Composer it's the preferred method to generate the files needed to get a
 	require 'tad/lib/Exceptions/FilterArgumentError.php';
 	require 'tad/lib/Exceptions/UnrecognizedArgument.php';
 	require 'tad/lib/Exceptions/UnrecognizedCommand.php';
-    
+
     ```
-    
+
 ####Handling namespaces
 All TAD-PHP classes are under the namespace named **TADPHP**. So, to use any class you need to use the **Fully qualified class name**. For example, to get a new instance of **TADFactory class** you need to use:
 
@@ -130,9 +130,9 @@ You can customize TAD object traits passing an options array:
     'udp_port' => 20000      // 4370 by default.
     'encoding' => 'utf-8'    // iso8859-1 by default.
   ];
-  
+
   $tad_factory = new TADFactory($options);
-  $tad = $tad_factory->get_instance();  
+  $tad = $tad_factory->get_instance();
 ```
 ##TAD API
 SOAP API is implemented by **TADSoap class**. All methods that use UDP Protocol are implemented by **PHP_ZKLib class**. Even though you have 2 classes, you do not have to be worried about which method is been calling using SOAP api or through PHP_ZKLib. You've got a single interface.
@@ -231,14 +231,14 @@ The device uses an algorithm to encode fingerprints called "BioBridge" and it ha
 
 ```php
 /** Setting a user template (fingerprint).
- * 
+ *
  * You can upload until 10 templates per user. You have to use 'finger_id' param to indicate
  * which fingerprint you are uploading to.
- * 
+ *
  * Till now, this method only works with VX 9.0 BioBridge algorithm :-(. Any help
- * arround this issue will be appreciated. 
+ * arround this issue will be appreciated.
  */
- 
+
 // The folowing string represents a fingerprint encoded using BioBridge algorithm VX 9.0
 $template1_vx9 = "ocosgoulTUEdNKVRwRQ0I27BDTEkdMEONK9KQQunMVSBK6VPLEENk9MwgQ+DP3PBC1FTXEEG4ihpQQQ3vFQBO4K+WwERYilHAQ8ztktBEBbKQ0ELDtJrwQ7dqCiBCz+/IgEGKrBjQQhEO0zBFQNDQYEKFbhrQQdLF1wBDxclfUELMNFXwQRvvmHBCslKUAEZfU1OQRzmIU5BXRW0eoEKPMltgQnQGUyBJQSfRIEUSzIdAQ45l3gBByHUTMEJ5yVhQQmi0UZBFHvYPUEGeKxTAQ6rFGNBCIYURoEOZS9VwR+1M4RoE5m0DRUTF8DHd6HdqxHAxWmj393M28DDX2FkanKi/t7LGsDCWqGarmt1BaL/25nAwVaiipu/cgcQGKG6mcDBU6KYmr5wChQcobmJIsDBUKKJmZ1uExyi+ZaYwMFMgU2CQCSinYdnJsDBR4Ghl3Q4owa3dnfAwUamdlZlR5p2Zi7AwUSndERlfOpWZlfAwUOiQzVkLDhDopRUVTLAwT2iQ0ZjIzVMolNFRcDBN6I0ZlQebVaiEjRVwMEyolVVUxVxXKEBRUTAwS+iZVYyD3JhoQJFTMDBLKJlVUIKcWShBVVTwMIkoWVkFQhyaaEVZ1rAwh6hVlUPAW+iNGd3wMIToWdlBnWiRWZ3aMDDCqRmZjRpZmrAxASjd2Vnh2/gAA==";
 
@@ -293,14 +293,14 @@ $tad->delete_data(['value'=>3]);
 ###Getting some statistics from the device.
 You can get some valuable statistics about your device including:
 
- * Space available for templates. 
+ * Space available for templates.
  * Space available for attendance logs.
  * Total storage capacity for attendance logs.
  * Total storage capacity for user templates.
  * Total users stored
  * Total user passwords stored.
  * Total attendance logs stored.
- * Total templates stored. 
+ * Total templates stored.
 
 ```php
 // Get some device statistics.
@@ -405,7 +405,7 @@ $array_att_logs = $att_logs->to_array().
 
 // Lets get an XML response in one single step.
 $xml = $tad->get_att_logs()->to_xml();
-``` 
+```
 
 ###Counting how many items has the response
 When you are interested just in how many items has the response, just count them:

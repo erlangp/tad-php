@@ -27,16 +27,16 @@
 
 namespace Test;
 
-use TADPHP\TAD;
-use TADPHP\TADFactory;
 use TADPHP\Providers\TADSoap;
 use TADPHP\Providers\TADZKLib;
+use TADPHP\TAD;
+use TADPHP\TADFactory;
 
 class TADTest extends \PHPUnit_Framework_TestCase
 {
     public function testSoapCommandsAvailable()
     {
-        $commands = TAD::soap_commands_available(['include_command_string'=>true]);
+        $commands = TAD::soap_commands_available(['include_command_string' => true]);
 
         $this->assertInternalType('array', $commands);
         $this->assertTrue($commands !== array_values($commands));
@@ -66,7 +66,7 @@ class TADTest extends \PHPUnit_Framework_TestCase
         $method = array_keys($options)[0];
         $expected_value = array_values($options)[0];
 
-        $tad_options = array_merge(['ip'=>'127.0.0.1'], $options);
+        $tad_options = array_merge(['ip' => '127.0.0.1'], $options);
         $tad = (new TADFactory($tad_options))->get_instance();
 
         $option_value = $tad->{"get_$method"}();
@@ -76,7 +76,7 @@ class TADTest extends \PHPUnit_Framework_TestCase
 
     public function testDeviceWithInvalidIPAddressIsNotAlive()
     {
-        $tad = (new TADFactory(['ip'=>'1.2.3.4', 'connection_timeout'=>1]))->get_instance();
+        $tad = (new TADFactory(['ip' => '1.2.3.4', 'connection_timeout' => 1]))->get_instance();
 
         $this->assertFalse($tad->is_alive());
     }
@@ -86,7 +86,7 @@ class TADTest extends \PHPUnit_Framework_TestCase
      */
     public function testTADThrowsConnectionErrorExceptionWithInvalidDeviceIPAddress()
     {
-        $tad = (new TADFactory(['ip'=>'1.2.3.4', 'connection_timeout'=>1]))->get_instance();
+        $tad = (new TADFactory(['ip' => '1.2.3.4', 'connection_timeout' => 1]))->get_instance();
         $tad->get_date();
     }
 
@@ -95,7 +95,7 @@ class TADTest extends \PHPUnit_Framework_TestCase
      */
     public function testTADThrowsUnrecognizedCommandExceptionWithInvalidCommand()
     {
-        $tad = (new TADFactory(['ip'=>'127.0.0.1']))->get_instance();
+        $tad = (new TADFactory(['ip' => '127.0.0.1']))->get_instance();
         $tad->foo();
     }
 
@@ -104,8 +104,8 @@ class TADTest extends \PHPUnit_Framework_TestCase
      */
     public function testTADThrowsUnrecognizedArgumentExceptionWithValidCommand()
     {
-        $tad = (new TADFactory(['ip'=>'127.0.0.1']))->get_instance();
-        $tad->get_user_info(['foo'=>'bar']);
+        $tad = (new TADFactory(['ip' => '127.0.0.1']))->get_instance();
+        $tad->get_user_info(['foo' => 'bar']);
     }
 
     public function testTAD()
@@ -116,21 +116,21 @@ class TADTest extends \PHPUnit_Framework_TestCase
         $zklib_provider = new TADZKLib($options['tad']);
 
         $tad = $this->getMockBuilder('\TADPHP\TAD')
-          ->setConstructorArgs([ $tad_soap_provider, $zklib_provider, $options['tad']])
-          ->setMethods(['is_alive', 'execute_command_via_tad_soap', 'execute_command_via_zklib'])
-          ->getMock();
+            ->setConstructorArgs([$tad_soap_provider, $zklib_provider, $options['tad']])
+            ->setMethods(['is_alive', 'execute_command_via_tad_soap', 'execute_command_via_zklib'])
+            ->getMock();
 
         $tad->expects($this->any())
-          ->method('is_alive')
-          ->will($this->returnValue(true));
+            ->method('is_alive')
+            ->will($this->returnValue(true));
 
         $tad->expects($this->any())
-          ->method('execute_command_via_tad_soap')
-          ->will($this->returnValue('<CommandResponse>Executed via SOAP</CommandResponse>'));
+            ->method('execute_command_via_tad_soap')
+            ->will($this->returnValue('<CommandResponse>Executed via SOAP</CommandResponse>'));
 
         $tad->expects($this->once())
-          ->method('execute_command_via_zklib')
-          ->will($this->returnValue('<CommandResponse>Executed via ZKLib</CommandResponse>'));
+            ->method('execute_command_via_zklib')
+            ->will($this->returnValue('<CommandResponse>Executed via ZKLib</CommandResponse>'));
 
         $this->assertEquals(
             '<CommandResponse>Executed via SOAP</CommandResponse>',
@@ -150,20 +150,20 @@ class TADTest extends \PHPUnit_Framework_TestCase
         $soap_client = new \SoapClient(null, $options['soap']);
 
         $tad_soap = $this->getMockBuilder('TADPHP\Providers\TADSoap')
-          ->setConstructorArgs([ $soap_client, $options['soap'] ])
-          ->setMethods(['execute_soap_command'])
-          ->getMock();
+            ->setConstructorArgs([$soap_client, $options['soap']])
+            ->setMethods(['execute_soap_command'])
+            ->getMock();
 
         $tad_soap->expects($this->once())
-          ->method('execute_soap_command')
-          ->will($this->returnValue($mock_response));
+            ->method('execute_soap_command')
+            ->will($this->returnValue($mock_response));
 
         $zklib_provider = new TADZKLib($options['tad']);
 
         $tad = $this->getMockBuilder('\TADPHP\TAD')
-          ->setConstructorArgs([ $tad_soap, $zklib_provider, $options['tad'] ])
-          ->setMethods(null)
-          ->getMock();
+            ->setConstructorArgs([$tad_soap, $zklib_provider, $options['tad']])
+            ->setMethods(null)
+            ->getMock();
 
         $response = $tad->execute_command_via_tad_soap('get_date', []);
 
@@ -174,27 +174,27 @@ class TADTest extends \PHPUnit_Framework_TestCase
     {
         $options = $this->get_tad_and_soap_options();
         $mock_response = ''
-                . '<SetDateResponse>'
-                . '<Result>1</Result>'
-                . '<Information>Successfully!</Information>'
-                . '</SetDateResponse>';
+            . '<SetDateResponse>'
+            . '<Result>1</Result>'
+            . '<Information>Successfully!</Information>'
+            . '</SetDateResponse>';
 
         $soap_client = new \SoapClient(null, $options['soap']);
         $tad_soap = new TADSoap($soap_client, $options['soap']);
 
         $zk = $this->getMockBuilder('TADPHP\Providers\TADZKLib')
-          ->setConstructorArgs([ $options['tad'] ])
-          ->setMethods(['__call'])
-          ->getMock();
+            ->setConstructorArgs([$options['tad']])
+            ->setMethods(['__call'])
+            ->getMock();
 
         $zk->expects($this->once())
-           ->method('__call')
-           ->will($this->returnValue($mock_response));
+            ->method('__call')
+            ->will($this->returnValue($mock_response));
 
         $tad = $this->getMockBuilder('\TADPHP\TAD')
-          ->setConstructorArgs([ $tad_soap, $zk, $options['tad'] ])
-          ->setMethods(null)
-          ->getMock();
+            ->setConstructorArgs([$tad_soap, $zk, $options['tad']])
+            ->setMethods(null)
+            ->getMock();
 
         $response = $tad->set_date();
 
@@ -227,9 +227,9 @@ class TADTest extends \PHPUnit_Framework_TestCase
             [['com_key' => 0]],
             [['internal_id' => 100]],
             [['description' => 'Foo']],
-            [['connection_timeout'=> 1]],
+            [['connection_timeout' => 1]],
             [['udp_port' => 4370]],
-            [['encoding'=>'iso8859-1']]
+            [['encoding' => 'iso8859-1']]
         ];
 
         return $options;
