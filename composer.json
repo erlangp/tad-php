@@ -1,5 +1,5 @@
 {
-  "name": "TAD-PHP",
+  "name": "erlangp/cobisja-tad-php",
   "type": "library",
   "description": "PHP class that allows you interact with ZK Time & Attendance devices.",
   "keywords": [
