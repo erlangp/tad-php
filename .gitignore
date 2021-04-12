@@ -3,3 +3,4 @@ index.php
 coverage/**/*
 nbproject/**/*
 vendor/**/*
+composer.phar
